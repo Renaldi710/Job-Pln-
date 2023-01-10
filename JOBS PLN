@@ -1,0 +1,218 @@
+#include <a_samp>
+#include <streamer>
+#include <zcmd>
+
+#define SCM SendClientMessage
+
+#define COLOR_RED 0xFF0000AA
+#define COLOR_YELLOW 0xFFFF00AA
+#define COLOR_BLUE 0x33AAFFFF
+#define MERAH "{FF0000}"
+#define PUTIH "{ffffff}"
+#define BIRU "{56A4E4}"
+
+enum JobPln
+{
+	MOBIL_PLN,
+	mulai,
+	pln1,
+	pln2,
+	pln3,
+	selesai
+};
+new PlnInfo[MAX_PLAYERS][JobPln];
+new tmpobjid;
+
+main()
+{
+	print("\n----------------------------------");
+	print(" JOB PLN BY RENALDI");
+	print("----------------------------------\n");
+}
+
+public OnGameModeInit()
+{
+	//job pln
+  tmpobjid = CreateDynamicObject(16082, -378.424774, -1544.349365, 24.507997, 0.000000, 0.000000, 99.000000, -1, -1, -1, 300.00, 300.00);
+	tmpobjid = CreateDynamicObject(13007, -381.119232, -1525.846801, 29.980337, 0.000000, 0.000000, 280.000000, -1, -1, -1, 300.00, 300.00);
+	tmpobjid = CreateDynamicObject(19370, -381.459503, -1536.148681, 28.054290, 0.000000, -87.000000, 97.000000, -1, -1, -1, 300.00, 300.00);
+	tmpobjid = CreateDynamicObject(1491, -383.069366, -1535.582763, 27.913511, 0.000000, 0.000000, 7.000000, -1, -1, -1, 300.00, 300.00);
+	tmpobjid = CreateDynamicObject(1649, -374.089416, -1517.457031, 29.191274, 0.000000, 0.000000, -79.000000, -1, -1, -1, 300.00, 300.00);
+	tmpobjid = CreateDynamicObject(1314, -384.615936, -1518.713623, 29.091274, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300.00, 300.00);
+	tmpobjid = CreateDynamicObject(1313, -382.263977, -1518.079223, 29.191274, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300.00, 300.00);
+	tmpobjid = CreateDynamicObject(1649, -374.089416, -1517.457031, 29.191274, 0.000000, 0.000000, 101.000000, -1, -1, -1, 300.00, 300.00);
+	tmpobjid = CreateDynamicObject(1649, -374.089416, -1517.457031, 29.191274, 0.000000, 0.000000, 101.000000, -1, -1, -1, 300.00, 300.00);
+	tmpobjid = CreateDynamicObject(3638, -273.685211, -1519.818969, 6.669909, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300.00, 300.00);
+	tmpobjid = CreateDynamicObject(3673, -271.673583, -1501.201049, 25.506172, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300.00, 300.00);
+	tmpobjid = CreateDynamicObject(954, -274.134399, -1530.240600, 4.209709, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300.00, 300.00);
+	tmpobjid = CreateDynamicObject(954, -287.111450, -1570.347778, 7.108279, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300.00, 300.00);
+	tmpobjid = CreateDynamicObject(954, -195.467422, -1465.644042, 8.478137, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300.00, 300.00);
+	tmpobjid = CreateDynamicObject(954, -340.255706, -1654.508911, 25.419845, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300.00, 300.00);
+	tmpobjid = CreateDynamicObject(954, -389.161437, -1751.864135, 9.018056, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300.00, 300.00);
+
+  Create3DTextLabel("{00ffff}[INFO PLN]\n {ffff00}CMD:/GAJIPLN",0xDCDCDCFF,83.6740,-192.5000,1.5401, 20,0,1);
+  Create3DTextLabel("{00ffff}[INFO PLN]\n{ffff00}CMD:/perbaikipln1",0xDCDCDCFF,-1085.6794,-1048.9106,145.2901, 20,0,1);
+	Create3DTextLabel("{00ffff}[INFO PLN]\n{ffff00}CMD:/perbaikipln2",0xDCDCDCFF,-1098.7791,-1048.9084,145.2901, 20,0,1);
+ 	Create3DTextLabel("{00ffff}[INFO PLN]\n{ffff00}CMD:/perbaikipln3",0xDCDCDCFF,-1115.7534,-1048.9092,145.2901, 20,0,1);
+  CreateDynamic3DTextLabel("[JOB PLN]", -1, 83.8134,-187.6218,1.5387, 15.0);
+
+  CreatePlnVehicle();
+	return 1;
+}
+
+public OnPlayerConnect(playerid)
+{
+	PlnInfo[playerid][MOBIL_PLN]=0;
+	PlnInfo[playerid][mulai]=0;
+	PlnInfo[playerid][pln1]=0;
+	PlnInfo[playerid][pln2]=0;
+	PlnInfo[playerid][pln3]=0;
+	PlnInfo[playerid][selesai]=0;
+	return 1;
+}
+
+public OnPlayerDisconnect(playerid, reason)
+{
+	PlnInfo[playerid][MOBIL_PLN]=0;
+	PlnInfo[playerid][mulai]=0;
+	PlnInfo[playerid][pln1]=0;
+	PlnInfo[playerid][pln2]=0;
+	PlnInfo[playerid][pln3]=0;
+	PlnInfo[playerid][selesai]=0;
+	return 1;
+}
+
+public OnPlayerDeath(playerid, killerid, reason)
+{
+	PlnInfo[playerid][MOBIL_PLN]=0;
+	PlnInfo[playerid][mulai]=0;
+	PlnInfo[playerid][pln1]=0;
+	PlnInfo[playerid][pln2]=0;
+	PlnInfo[playerid][pln3]=0;
+	PlnInfo[playerid][selesai]=0;
+	return 1;
+}
+
+public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
+{
+	if(PlnInfo[playerid][MOBIL_PLN]<=0)
+	{
+		RemovePlayerFromVehicle(playerid);
+		SendClientMessage(playerid, 0xCECECEFF, "");
+	}
+	return 1;
+}
+
+stock CreatePlnVehicle()
+{
+	new spawn_time = 60 * 5;
+	CreateVehicle(552,20.2380,-2641.5132,40.1486,93.2618,2,2, spawn_time, 0, MOBIL_PLN);
+	CreateVehicle(552,20.0392,-2637.4583,40.1181,93.5994,2,2, spawn_time, 0, MOBIL_PLN);
+	CreateVehicle(552,27.6211,-2637.0178,40.1156,91.6582,2,2, spawn_time, 0, MOBIL_PLN);
+	CreateVehicle(552,27.6908,-2641.1382,40.1276,92.4104,2,2, spawn_time, 0, MOBIL_PLN);
+	CreateVehicle(552,34.9740,-2640.8545,40.1195,93.9737,2,2, spawn_time, 0, MOBIL_PLN);
+	CreateVehicle(552,35.1564,-2636.8411,40.1179,90.9938,2,2, spawn_time, 0, MOBIL_PLN);
+	CreateVehicle(552,35.0770,-2633.0635,40.1011,90.3395,2,2, spawn_time, 0, MOBIL_PLN);
+	CreateVehicle(552,27.6484,-2633.1882,40.0990,89.6061,2,2, spawn_time, 0, MOBIL_PLN);
+}
+
+stock ERRORPLN(playerid)
+{
+	SendClientMessage(playerid, COLOR_RED, "Error Kamu SUdah Mengambil Pekerjaan Ini!!");
+	return 1;
+}
+stock ERRORPLN1(playerid)
+{
+	SendClientMessage(playerid, COLOR_RED, "Error Kamu SUdah Memperbaiki Bagian Ini!!");
+	return 1;
+}
+
+
+// =====[PLN BY ME]===== //
+CMD:kerjapln(playerid, params[])
+{
+	if(PlnInfo[playerid][mulai] == 1) return ERRORPLN(playerid);
+    if(!IsPlayerInRangeOfPoint(playerid,5.0, 24.5073 ,-2646.6960, 40.4646))
+    {
+	    SetPlayerCheckpoint(playerid, -1085.6794,-1048.9106,145.2901, 5.0);
+	    SetPlayerSkin(playerid, 16);
+		PlnInfo[playerid][mulai]=1;
+	    SendClientMessage(playerid, COLOR_YELLOW, "[SERVER]: "PUTIH"Anda berhasil mengambil pekerjaan ini!");
+	    SendClientMessage(playerid, COLOR_YELLOW, "[SERVER]: "PUTIH"Menuju ke lokasi pekerjaan berada!");
+    }
+    else
+    {
+    	SendClientMessage(playerid, COLOR_RED, "Error Kamu Harus Berada Di Tempat PLN!!");
+    }
+    return 1;
+}
+
+CMD:perbaikipln1(playerid, params[])
+{
+	if(PlnInfo[playerid][mulai] == 0) return SCM(playerid, COLOR_RED, "Error Kamu Belum Mengambil Pekerjaan Ini!!");
+	if(PlnInfo[playerid][pln1] == 1) return ERRORPLN1(playerid);
+	if(IsPlayerInRangeOfPoint(playerid,5.0,-1085.6794,-1048.9106,145.2901))
+    {
+		SetPlayerCheckpoint(playerid, -1098.7791,-1048.9084,145.2901, 5.0);
+		ApplyAnimation(playerid, "BOMBER", "BOM_Plant", 4.0, 0, 0, 0, 0, 0);
+		PlnInfo[playerid][pln1]=1;
+		SendClientMessage(playerid, COLOR_BLUE, "[SERVER]: "PUTIH"Kamu Sudah Memperbaiki Listrik Ini!");
+		SendClientMessage(playerid, COLOR_BLUE, "[SERVER]: "PUTIH"Lanjut Dan Ikuti Checkpoint!");
+    }
+    return 1;
+}
+CMD:perbaikipln2(playerid, params[])
+{
+	if(PlnInfo[playerid][mulai] == 0) return SCM(playerid, COLOR_RED, "Error Kamu Belum Mengambil Pekerjaan Ini!!");
+	if(PlnInfo[playerid][pln1] == 0) return SCM(playerid, COLOR_RED, "Error Kamu Belum Memperbaiki Tower Listrik Sebelumnya!!");
+	if(PlnInfo[playerid][pln2] == 1) return ERRORPLN1(playerid);
+	if(IsPlayerInRangeOfPoint(playerid,5.0,-1098.7791,-1048.9084,145.2901))
+    {
+		SetPlayerCheckpoint(playerid, -1115.7534,-1048.9092,145.2901, 5.0);
+		ApplyAnimation(playerid, "BOMBER", "BOM_Plant", 4.0, 0, 0, 0, 0, 0);
+		PlnInfo[playerid][pln2]=1;
+		SendClientMessage(playerid, COLOR_BLUE, "[SERVER]: "PUTIH"Kamu Sudah Memperbaiki Listrik Ini!");
+		SendClientMessage(playerid, COLOR_BLUE, "[SERVER]: "PUTIH"Lanjut Dan Ikuti Checkpoint!");
+    }
+    return 1;
+}
+
+CMD:perbaikipln3(playerid, params[])
+{
+	if(PlnInfo[playerid][mulai] == 0) return SCM(playerid, COLOR_RED, "Error Kamu Belum Mengambil Pekerjaan Ini!!");
+	if(PlnInfo[playerid][pln1] == 0) return SCM(playerid, COLOR_RED, "Error Kamu Belum Memperbaiki Tower Listrik Sebelumnya!!");
+	if(PlnInfo[playerid][pln2] == 0) return SCM(playerid, COLOR_RED, "Error Kamu Belum Memperbaiki Tower Listrik Sebelumnya!!");
+	if(PlnInfo[playerid][pln3] == 1) return ERRORPLN1(playerid);
+	if(IsPlayerInRangeOfPoint(playerid,5.0,-1115.7534,-1048.9092,145.2901))
+    {
+		SetPlayerCheckpoint(playerid, 83.8134,-187.6218,1.5387, 5.0);
+		ApplyAnimation(playerid, "BOMBER", "BOM_Plant", 4.0, 0, 0, 0, 0, 0);
+		PlnInfo[playerid][pln3]=1;
+		PlnInfo[playerid][selesai]=1;
+		SendClientMessage(playerid, COLOR_BLUE, "[SERVER]: "PUTIH"Kamu Sudah Memperbaiki Semua Tower Listrik!");
+		SendClientMessage(playerid, COLOR_BLUE, "[SERVER]: "PUTIH"Ambil Gajimu Dan Ikuti Checkpoint!");
+   	}
+    return 1;
+}
+
+CMD:gajipln(playerid, params[])
+{
+	if(PlnInfo[playerid][mulai] == 0) return SCM(playerid, COLOR_RED, "Error Kamu Belum Mengambil Pekerjaan Ini!!");
+	if(PlnInfo[playerid][pln1] == 0) return SCM(playerid, COLOR_RED, "Error Kamu Belum Memperbaiki Tower Listrik Sebelumnya!!");
+	if(PlnInfo[playerid][pln2] == 0) return SCM(playerid, COLOR_RED, "Error Kamu Belum Memperbaiki Tower Listrik Sebelumnya!!");
+	if(PlnInfo[playerid][pln3] == 0) return SCM(playerid, COLOR_RED, "Error Kamu Belum Memperbaiki Tower Listrik Sebelumnya!!");
+	if(PlnInfo[playerid][selesai] == 0) return SCM(playerid, COLOR_RED, "Error Kamu Belum Memperbaiki Tower Listrik Sebelumnya!!");
+	if(IsPlayerInRangeOfPoint(playerid,5.0,83.6740,-192.5000,1.5401))
+    {
+	    GameTextForPlayer(playerid, "~g~+Rp40000", 2000, 1);
+		GivePlayerMoney(playerid, 40000);
+		PlnInfo[playerid][mulai]=0;
+		PlnInfo[playerid][pln1]=0;
+		PlnInfo[playerid][pln2]=0;
+		PlnInfo[playerid][pln3]=0;
+		PlnInfo[playerid][selesai]=0;
+	    SendClientMessage(playerid, COLOR_BLUE, "{00ffff}[INFO]{ffff00}ANDA SUDAH MENGAMBIL GAJI PLN");
+	    SendClientMessage(playerid, COLOR_BLUE, "{00ffff}[INFO]{ffff00}SILAHKAN LANJUT PERKERJAAN ANDA");
+    }
+    return 1;
+}
